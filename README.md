@@ -4,8 +4,8 @@
 This project compares multiple predictive models on a regression problem. I used a public dataset to predict housing prices then evaluate which model performs best.
 
 ## Models Compared
- Linear Regression (baseline)
- Random Forest
+ linear Regression (baseline)
+ 4andom Forest
  XGBoost
 
 ## Key Metrics
@@ -14,11 +14,7 @@ This project compares multiple predictive models on a regression problem. I used
  MAE
 
 ## Skills Demonstrated
- Feature engineering
- Model comparison
- Hyperparameter tuning
- Evaluation metrics
- Visualization
+ Feature engineering, model comparison, hyperparameter tuning, evaluation metrics, visualization
 
 ## How to Run
 1. `pip install -r requirements.txt`
