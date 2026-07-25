@@ -1,0 +1,120 @@
+import json
+import os
+
+# Create notebooks directory if it doesn't exist
+os.makedirs('notebooks', exist_ok=True)
+
+notebook = {
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Model Comparison: Linear vs Random Forest vs XGBoost\n",
+    "\n",
+    "Comparing models on California housing dataset."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score\n",
+    "\n",
+    "sns.set_style(\"whitegrid\")\n",
+    "plt.rcParams['figure.figsize'] = (10, 6)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X_train = np.load('data/X_train.npy')\n",
+    "X_test = np.load('data/X_test.npy')\n",
+    "y_train = np.load('data/y_train.npy')\n",
+    "y_test = np.load('data/y_test.npy')\n",
+    "\n",
+    "print(f\"Training set: {X_train.shape[0]} samples\")\n",
+    "print(f\"Test set: {X_test.shape[0]} samples\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "results = {}\n",
+    "\n",
+    "with open('results/baseline_results.txt', 'r') as f:\n",
+    "    lines = f.readlines()\n",
+    "    results['Linear Regression'] = {\n",
+    "        'RMSE': float(lines[0].split(': ')[1]),\n",
+    "        'R2': float(lines[2].split(': ')[1])\n",
+    "    }\n",
+    "\n",
+    "with open('results/rf_results.txt', 'r') as f:\n",
+    "    lines = f.readlines()\n",
+    "    results['Random Forest'] = {\n",
+    "        'RMSE': float(lines[3].split(': ')[1]),\n",
+    "        'R2': float(lines[4].split(': ')[1])\n",
+    "    }\n",
+    "\n",
+    "with open('results/xgb_results.txt', 'r') as f:\n",
+    "    lines = f.readlines()\n",
+    "    results['XGBoost'] = {\n",
+    "        'RMSE': float(lines[3].split(': ')[1]),\n",
+    "        'R2': float(lines[4].split(': ')[1])\n",
+    "    }\n",
+    "\n",
+    "results_df = pd.DataFrame(results).T\n",
+    "print(results_df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, axes = plt.subplots(1, 2, figsize=(12, 4))\n",
+    "\n",
+    "results_df['RMSE'].plot(kind='bar', ax=axes[0], color=['blue', 'green', 'orange'])\n",
+    "axes[0].set_title('RMSE by Model')\n",
+    "axes[0].set_ylabel('RMSE')\n",
+    "axes[0].tick_params(axis='x', rotation=45)\n",
+    "\n",
+    "results_df['R2'].plot(kind='bar', ax=axes[1], color=['blue', 'green', 'orange'])\n",
+    "axes[1].set_title('R-squared by Model')\n",
+    "axes[1].set_ylabel('R-squared')\n",
+    "axes[1].tick_params(axis='x', rotation=45)\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.savefig('results/model_comparison.png', dpi=150)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Summary\n",
+    "\n",
+    "XGBoost performed best overall. Random Forest was second, Linear Regression was a good baseline but not as good as tree based models"
+   ]
+  }
+ ]
+}
+
+with open('notebooks/model_comparison.ipynb', 'w') as f:
+    json.dump(notebook, f, indent=1)
+
+print("Notebook created")
